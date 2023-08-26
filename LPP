@@ -1,0 +1,194 @@
+
+import tkinter as tk
+from tkinter import ttk
+from tkinter import messagebox
+from tkcalendar import Calendar
+from datetime import datetime
+from tkinter import simpledialog
+import psycopg2
+
+
+class FormApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Formularz Przyjęcia")
+
+        self.create_form()
+
+    def create_form(self):
+        self.data_label = ttk.Label(self.root, text="Data:")
+        self.data_label.grid(row=0, column=0, padx=10, pady=5)
+        self.data_entry = ttk.Entry(self.root)
+        self.data_entry.grid(row=0, column=1, padx=10, pady=5)
+
+        self.Nr_tygodnia_label = ttk.Label(self.root, text="Nr_tygodnia:")
+        self.Nr_tygodnia_label.grid(row=1, column=0, padx=10, pady=5)
+        self.Nr_tygodnia_entry = ttk.Entry(self.root)
+        self.Nr_tygodnia_entry.grid(row=1, column=1, padx=10, pady=5)
+
+        self.Nr_rejestracyjne_label = ttk.Label(self.root, text="Nr_rejestracyjne:")
+        self.Nr_rejestracyjne_label.grid(row=2, column=0, padx=10, pady=5)
+        self.Nr_rejestracyjne_entry = ttk.Entry(self.root)
+        self.Nr_rejestracyjne_entry.grid(row=2, column=1, padx=10, pady=5)
+
+        self.Nr_plomby_label = ttk.Label(self.root, text="Nr_plomby:")
+        self.Nr_plomby_label.grid(row=3, column=0, padx=10, pady=5)
+        self.Nr_plomby_entry = ttk.Entry(self.root)
+        self.Nr_plomby_entry.grid(row=3, column=1, padx=10, pady=5)
+
+        self.Dane_kierowcy_label = ttk.Label(self.root, text="Dane_kierowcy:")
+        self.Dane_kierowcy_label.grid(row=4, column=0, padx=10, pady=5)
+        self.Dane_kierowcy_entry = ttk.Entry(self.root)
+        self.Dane_kierowcy_entry.grid(row=4, column=1, padx=10, pady=5)
+
+        self.data_i_godzina_wjazdu_label = ttk.Label(self.root, text="Data i godzina wjazdu:")
+        self.data_i_godzina_wjazdu_label.grid(row=5, column=0, padx=10, pady=5)
+        self.data_i_godzina_wjazdu_entry = ttk.Entry(self.root)
+        self.data_i_godzina_wjazdu_entry.grid(row=5, column=1, padx=10, pady=5)
+        self.choose_datetime_button = ttk.Button(self.root, text="Wybierz", command=self.show_calendar)
+        self.choose_datetime_button.grid(row=5, column=2, padx=5, pady=5)
+
+        # ...
+
+
+
+        self.Data_i_godzina_podstawienia_label = ttk.Label(self.root, text="Data_i_godzina_podstawienia")
+        self.Data_i_godzina_podstawienia_label.grid(row=6, column=0, padx=10, pady=5)
+        self.Data_i_godzina_podstawienia_entry = ttk.Entry(self.root)
+        self.Data_i_godzina_podstawienia_entry.grid(row=6, column=1, padx=10, pady=5)
+
+
+        self.Data_i_godzina_wyjazdu_label = ttk.Label(self.root, text="Data_i_godzina_wyjazdu")
+        self.Data_i_godzina_wyjazdu_label.grid(row=7, column=0, padx=10, pady=5)
+        self.Data_i_godzina_wyjazdu_entry = ttk.Entry(self.root)
+        self.Data_i_godzina_wyjazdu_entry.grid(row=7, column=1, padx=10, pady=5)
+
+        self.Ilość_palet_label = ttk.Label(self.root, text="Ilość_palet")
+        self.Ilość_palet_label.grid(row=8, column=0, padx=10, pady=5)
+        self.Ilość_palet_entry = ttk.Entry(self.root)
+        self.Ilość_palet_entry.grid(row=8, column=1, padx=10, pady=5)
+
+        self.Ilość_kartonów_label = ttk.Label(self.root, text="Ilość_kartonów")
+        self.Ilość_kartonów_label.grid(row=9, column=0, padx=10, pady=5)
+        self.Ilość_kartonów_entry = ttk.Entry(self.root)
+        self.Ilość_kartonów_entry.grid(row=9, column=1, padx=10, pady=5)
+
+        self.Ilość_sztuk_label = ttk.Label(self.root, text="Ilość_sztuk")
+        self.Ilość_sztuk_label.grid(row=10, column=0, padx=10, pady=5)
+        self.Ilość_sztuk_entry = ttk.Entry(self.root)
+        self.Ilość_sztuk_entry.grid(row=10, column=1, padx=10, pady=5)
+
+        self.Osoby_na_rozładunku_label = ttk.Label(self.root, text="Osoby_na_rozładunku")
+        self.Osoby_na_rozładunku_label.grid(row=11, column=0, padx=10, pady=5)
+        self.Osoby_na_rozładunku_entry = ttk.Entry(self.root)
+        self.Osoby_na_rozładunku_entry.grid(row=11, column=1, padx=10, pady=5)
+
+        self.Dostawca_label = ttk.Label(self.root, text="Dostawca")
+        self.Dostawca_label.grid(row=12, column=0, padx=10, pady=5)
+        self.Dostawca_entry = ttk.Entry(self.root)
+        self.Dostawca_entry.grid(row=12, column=1, padx=10, pady=5)
+
+        self.Nr_dostaw_label = ttk.Label(self.root, text="Nr_dostaw")
+        self.Nr_dostaw_label.grid(row=13, column=0, padx=10, pady=5)
+        self.Nr_dostaw_entry = ttk.Entry(self.root)
+        self.Nr_dostaw_entry.grid(row=13, column=1, padx=10, pady=5)
+
+        self.luzem_palety_mieszane_label = ttk.Label(self.root, text="Luzem/Palety/Mieszane:")
+        self.luzem_palety_mieszane_label.grid(row=14, column=0, padx=10, pady=5)
+        self.luzem_palety_mieszane_var = tk.StringVar()
+        self.luzem_palety_mieszane_combobox = ttk.Combobox(self.root, textvariable=self.luzem_palety_mieszane_var,
+                                                           values=["Luzem", "Palety", "Mieszane"])
+        self.luzem_palety_mieszane_combobox.grid(row=14, column=1, padx=10, pady=5)
+
+        self.data_przyjecia_na_pto_label = ttk.Label(self.root, text="Data przyjęcia na PTO:")
+        self.data_przyjecia_na_pto_label.grid(row=15, column=0, padx=10, pady=5)
+        self.data_przyjecia_na_pto_entry = ttk.Entry(self.root)
+        self.data_przyjecia_na_pto_entry.grid(row=15, column=1, padx=10, pady=5)
+
+        self.save_button = ttk.Button(self.root, text="Zapisz", command=self.save_to_database)
+        self.save_button.grid(row=16, columnspan=2, padx=10, pady=10)
+
+    def show_calendar(self):
+        cal = Calendar(self.root, selectmode="day")
+        chosen_date = cal.selection_get()
+        if chosen_date:
+            chosen_time = simpledialog.askstring("Wybierz godzinę", "Wprowadź godzinę w formacie HH:MM:SS:")
+            if chosen_time:
+                chosen_datetime = datetime.combine(chosen_date, datetime.strptime(chosen_time, "%H:%M:%S").time())
+                self.data_i_godzina_wjazdu_entry.delete(0, tk.END)
+                self.data_i_godzina_wjazdu_entry.insert(0, chosen_datetime.strftime("%Y-%m-%d %H:%M:%S"))
+
+    def choose_datetime(self):
+        chosen_date = self.data_i_godzina_wjazdu_date.selection_get()
+        chosen_time = self.data_i_godzina_wjazdu_time_entry.get()
+        if chosen_date and chosen_time:
+            chosen_datetime = datetime.combine(chosen_date, datetime.strptime(chosen_time, "%H:%M:%S").time())
+            self.data_i_godzina_wjazdu_entry.delete(0, tk.END)
+            self.data_i_godzina_wjazdu_entry.insert(0, chosen_datetime.strftime("%Y-%m-%d %H:%M:%S"))
+
+    def show_calendar(self):
+        cal = Calendar(self.root, selectmode="day")
+        chosen_date = cal.selection_get()
+        if chosen_date:
+            chosen_time = simpledialog.askstring("Wybierz godzinę", "Wprowadź godzinę w formacie HH:MM:SS:")
+            if chosen_time:
+                chosen_datetime = datetime.combine(chosen_date, datetime.strptime(chosen_time, "%H:%M:%S").time())
+                self.data_i_godzina_wjazdu_entry.delete(0, tk.END)
+                self.data_i_godzina_wjazdu_entry.insert(0, chosen_datetime.strftime("%Y-%m-%d %H:%M:%S"))
+
+
+    # Tworzenie połączenia z bazą danych PostgreSQL
+
+    def save_to_database(self):
+        try:
+            connection = psycopg2.connect(
+                database="FC_LPP",
+                user="postgres",
+                password="Rafal123_A",
+                host="localhost",
+                port="54321"
+
+            )
+            cursor = connection.cursor()
+
+
+            Data = self.Data_entry.get()
+            Nr_tygodnia = self.Nr_tygodnia_entry.get()
+            Nr_rejestracyjne = self.Nr_rejestracyjne_entry.get()
+            Nr_plomby = self.Nr_plomby_entry.get()
+            Dane_kierowcy = self.Dane_kierowcy_entry.get()
+            Data_i_godzina_wjazdu = self.Data_i_godzina_wjazdu_entry.get()
+            Data_i_godzina_podstawienia = self.Data_i_godzina_podstawienia_entry.get()
+            Data_i_godzina_wyjazdu = self.Data_i_godzina_wyjazdu_entry.get()
+            Ilość_palet = self.Ilość_palet_entry.get()
+            Ilość_kartonów = self.Ilość_kartonow_entry.get()
+            Ilość_sztuk = self.Ilość_sztuk_entry.get()
+            Osoby_na_rozładunku = self.Osoby_na_rozładunku_entry.get()
+            Dostawca = self.dostawca_entry.get()
+            Nr_dostaw = self.numer_dostaw_entry.get()
+            Luzem_Palety_Mieszane = self.Luzem_Palety_Mieszane_var.get()
+            Data_przyjęcia_na_PTO = self.Data_przyjęwertia_na_PTO_entry.get()
+
+
+            # Pobierz pozostałe wartości z pól formularza w podobny sposób
+
+            luzem_palety_mieszane = self.luzem_palety_mieszane_var.get()
+
+            query = "INSERT INTO PK_Przyjęcia (Data, Nr_tygodnia, Nr_rejestracyjne, Nr_plomby, Dane_kierowcy, Data_i_godzina_wjazdu, Data_i_godzina_podstawienia, Data_i_godzina_wyjazdu, Ilość_palet, Ilość_kartonów, Ilość_sztuk, Osoby_na_rozładunku, Dostawca, Nr_dostaw, Luzem_Palety_Mieszane, Data_przyjęcia_na_PTO) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            cursor.execute(query, (Data, Nr_tygodnia, Nr_rejestracyjne, Nr_plomby, Dane_kierowcy, Data_i_godzina_wjazdu, Data_i_godzina_podstawienia, Data_i_godzina_wyjazdu, Ilość_palet, Ilość_kartonów, Ilość_sztuk, Osoby_na_rozładunku, Dostawca, Nr_dostaw, Luzem_Palety_Mieszane, Data_przyjęcia_na_PTO))
+
+            connection.commit()
+            connection.close()
+
+            messagebox.showinfo("Sukces", "Dane zostały zapisane do bazy danych.")
+
+        except Exception as e:
+            messagebox.showerror("Błąd", f"Wystąpił błąd: {str(e)}")
+
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = FormApp(root)
+    root.mainloop()
+
+

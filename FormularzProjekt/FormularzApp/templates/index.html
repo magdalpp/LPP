@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Strona główna</h1>
+  <p>{{ message }}</p>
+  <a href="{% url 'add_pk_przyjecia' %}">Dodaj nowe PK Przyjęcie</a>
+{% endblock %}
